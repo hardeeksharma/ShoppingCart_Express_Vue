@@ -1,0 +1,175 @@
+<!------ Include the above in your HEAD tag ---------->
+
+
+<!DOCTYPE html>
+<html class=''>
+<head>
+    <meta charset='UTF-8'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+    <link rel='stylesheet prefetch'
+          href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="cart.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="vue.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+
+<div id="app" style="width: 100%;">
+
+    <div class="row"
+         style=" z-index:999;background: black;color: white;padding: 18px;box-shadow: rgb(164, 155, 155) 5px 2px 8px 3px;position: fixed; overflow:hidden;width: 100%;top: 0;">
+        <div class="col-md-6 ">
+            <span style="font-size:20px">Nagarro Shop</span>
+        </div>
+        <div class="col-md-6 text-right">
+            <span class="" style="margin-right: 10px;">{{nop}} in cart</span>
+        </div>
+    </div>
+
+    <div style="margin-top:50px">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped" style="margin-top: 30px">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Product</th>
+                                <th scope="col" class="text-center">Quantity</th>
+                                <th scope="col" class="text-right">Price</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="item in cart">
+                                <td><img src="https://dummyimage.com/50x50/55595c/fff"/></td>
+                                <td>{{item.product.name}}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm" :id="item.product.id" style="display: inline"
+                                            @click="increaseQty">+
+                                    </button>
+                                    <input style="display: inline;width: 50px" class="form-control" type="text"
+                                           v-bind:value="item.qty"/>
+                                    <button class="btn btn-sm" :id="item.product.id" style="display: inline"
+                                            @click="decreaseQty">-
+                                    </button>
+                                </td>
+                                <td class="text-right">{{item.product.price}}</td>
+                                <td class="text-right">
+                                    <button class="btn btn-sm btn-danger"><i v-on:click="deleteItemFromCart"
+                                                                             :id="item.product.id"
+                                                                             class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Sub-Total</td>
+                                <td class="text-right">Rs. {{cartTotal}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Total</strong></td>
+                                <td class="text-right"><strong>Rs. {{cartTotal}}</strong></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col mb-2">
+                    <div class="row">
+                        <div class="col-sm-12  col-md-6">
+                            <a href="/" class="btn btn-block  btn-info btn-lg">Continue Shopping</a>
+                        </div>
+                        <div class="col-sm-12 col-md-6 text-right">
+                            <button class="btn btn-lg btn-block btn-success text-uppercase">Checkout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        let app = new Vue({
+            el: '#app',
+            data: {
+                pid: -1,
+                nop: 0,
+                message: 'hello',
+                cart: [],
+                cartTotal: 0
+            },
+            created: function () {
+                this.fillCart();
+            },
+            methods: {
+                async fillCart() {
+                    const cart = await  axios.get('/cart');
+                    this.cart = cart.data;
+                    const cartCount = await axios.get('/cart/count');
+                    this.nop = cartCount.data.count;
+                    this.cartTotal = 0;
+                    await this.cart.forEach(v => {
+                        this.cartTotal += parseInt(v.qty) * parseInt(v.product.price)
+                    })
+                },
+                async deleteItemFromCart(e) {
+                    var pid = e.target.id;
+                    console.log(pid)
+                    const result = await axios.delete('/cart/' + pid);
+                    console.log(result.data)
+                    if (result.data.success) {
+                        swal({
+                            title: "Success!",
+                            icon: 'success',
+                            text: "Product Deleted from cart Successfully",
+                            timer: 1500,
+                            buttons: false,
+                        })
+                    }
+                    else {
+                        swal({
+                            title: "Error!",
+                            icon: 'error',
+                            text: "No Product deleted",
+                            timer: 1500,
+                            buttons: false,
+                        })
+                    }
+                    this.fillCart()
+                },
+                async increaseQty(e) {
+
+                    var pid = e.target.id;
+                    const res = await axios.get('/cart/increment/' + pid);
+                    if (res.data.success)
+                        this.fillCart();
+                },
+                async decreaseQty(e) {
+
+                    var pid = e.target.id;
+                    const res = await axios.get('/cart/decrement/' + pid);
+                    if (res.data.success)
+                        this.fillCart();
+                }
+            }
+        })
+    })
+</script>
+
+</body>
+</html>

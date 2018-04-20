@@ -1,0 +1,138 @@
+<!------ Include the above in your HEAD tag ---------->
+
+
+<!DOCTYPE html>
+<html class=''>
+<head>
+    <meta charset='UTF-8'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+    <link rel='stylesheet prefetch'
+          href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="style.css">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="vue.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+
+<div id="app" style="width: 100%;">
+
+    <div class="row"
+         style=" z-index:999;background: black;color: white;padding: 18px;box-shadow: rgb(164, 155, 155) 5px 2px 8px 3px;position: fixed; overflow:hidden;width: 100%;top: 0;">
+        <div class="col-md-6 ">
+            <span style="font-size:20px">Nagarro Shop</span>
+        </div>
+        <div class="col-md-6 text-right">
+            <span class="" style="margin-right: 10px;">{{nop}} in cart</span><a href="viewcart"
+                                                                                class="btn btn-success btn-sm">View
+            Cart</a>
+        </div>
+    </div>
+
+
+    <div style="margin-top: 40px">
+        <div class="row">
+            <div class="col-md-2"
+                 style="margin-top: 20px;height: auto;background: rgb(242, 241, 241);color: black;padding-top: 20px;">
+
+                <div class="list-group" style="cursor: pointer">
+                    <a class="list-group-item list-group-item-action active">
+                        Vendor List
+                    </a>
+                    <a v-on:click="showAllProducts"
+                       class="list-group-item list-group-item-action">View All Products</a>
+                    <a v-for="vendor in vendors" v-on:click="showVendorProducts" v-bind:id="vendor.id"
+                       class="list-group-item list-group-item-action">{{vendor.name}}</a>
+                </div>
+
+            </div>
+            <div class="col-md-10">
+                <div class="block" v-for="p in products" style="float: left;">
+                    <div class="top">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a></li>
+                            <li><span class="converse">Vendor - {{p.vendor.name}}</span></li>
+                            <li><a href="#"><i v-on:click="addToCart" v-bind:id="p.id" class="fa fa-shopping-basket"
+                                               aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="middle">
+                        <img src="http://planetsim.gr/wp-content/uploads/2018/01/novye_postupleniya_1.jpg.png"
+                             alt="pic">
+                    </div>
+
+                    <div class="bottom">
+                        <div class="heading">{{p.name}}</div>
+
+                        <div class="price"><strong>Rs.{{p.price}}</strong></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var data = [];
+        let app = new Vue({
+            el: '#app',
+            data: {
+                pid: -1,
+                nop: 0,
+                message: 'hello',
+                products: [],
+                vendor: -1,
+                vendors: []
+            },
+            created: function () {
+                this.fillShop();
+            },
+            methods: {
+                async addToCart(e) {
+
+                    const res = await axios.post('/cart', {pid: e.target.id})
+                    if (res.data.success)
+                        swal({
+                            title: "Success!",
+                            icon: 'success',
+                            text: "Product Added to cart Successfully",
+                            timer: 1500,
+                            buttons: false,
+                        })
+                    const cartCount = await axios.get('/cart/count');
+                    this.nop = cartCount.data.count;
+
+                },
+                async fillShop() {
+                    const prod = await  axios.get('/products');
+                    this.products = prod.data;
+                    const cartCount = await axios.get('/cart/count');
+                    this.nop = cartCount.data.count;
+                    const v = await  axios.get('/vendors');
+                    this.vendors = v.data;
+                    //console.log(this.vendors);
+
+                },
+                async showVendorProducts(e) {
+                    const vid = e.target.id;
+                    const products = await axios.get('/products/vendor/' + vid);
+                    this.products = products.data;
+                },
+                async showAllProducts() {
+                    const products = await axios.get('/products/');
+                    this.products = products.data;
+                }
+
+            }
+        })
+    })
+</script>
+
+</body>
+</html>
