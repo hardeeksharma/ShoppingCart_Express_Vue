@@ -4,9 +4,9 @@ const productDao = require('../modal/productDao')
 const userDao = require('../modal/userDao')
 
 var uid = 1;
-/*route.use('/', (req, res,next) => {
-    if (req.session.uid) {
-        uid = req.session.uid;
+route.use('/', (req, res,next) => {
+    if (req.user) {
+        uid = req.user.id;
         console.log(uid);
         next();
     }
@@ -16,7 +16,7 @@ var uid = 1;
             msg: 'Please Login To add product to cart'
         })
     }
-})*/
+})
 
 route.get('/', (req, res) => {
     userDao.getUserWithId(uid).then(user => {

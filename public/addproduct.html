@@ -1,6 +1,3 @@
-<!------ Include the above in your HEAD tag ---------->
-
-
 <!DOCTYPE html>
 <html class=''>
 <head>
@@ -87,7 +84,7 @@
                 },
                 async addProduct() {
 
-                    if(this.price>0 && this.vid!=-1 && this.name!=""){
+                    if (this.price > 0 && this.vid != -1 && this.name != "") {
                         const res = await axios.post('/products', {
                             name: this.name,
                             price: parseInt(this.price),

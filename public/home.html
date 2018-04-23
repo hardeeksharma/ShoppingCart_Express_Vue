@@ -105,6 +105,17 @@
                             timer: 1500,
                             buttons: false,
                         })
+                    else
+                    {
+                        console.log("gello")
+                        swal({
+                            title: "Error!",
+                            icon: 'error',
+                            text: "Please login to add product to cart",
+                        }).then(()=>{
+                            window.location = "/login"
+                        })
+                    }
                     const cartCount = await axios.get('/cart/count');
                     this.nop = cartCount.data.count;
 
@@ -112,10 +123,11 @@
                 async fillShop() {
                     const prod = await  axios.get('/products');
                     this.products = prod.data;
-                    const cartCount = await axios.get('/cart/count');
-                    this.nop = cartCount.data.count;
                     const v = await  axios.get('/vendors');
                     this.vendors = v.data;
+                    const cartCount = await axios.get('/cart/count');
+                    this.nop = cartCount.data.count;
+
                     //console.log(this.vendors);
 
                 },

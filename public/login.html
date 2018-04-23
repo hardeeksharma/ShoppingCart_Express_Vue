@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html class=''>
+<head>
+    <meta charset='UTF-8'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+    <link rel='stylesheet prefetch'
+          href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="cart.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="vue.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+
+<div id="app" style="width: 100%;">
+
+    <div class="row"
+         style=" z-index:999;background: black;color: white;padding: 18px;box-shadow: rgb(164, 155, 155) 5px 2px 8px 3px;position: fixed; overflow:hidden;width: 100%;top: 0;">
+        <div class="col-md-6 ">
+            <span style="font-size:20px">Nagarro Shop</span>
+        </div>
+        <div class="col-md-6 text-right">
+            <a href="logout">Logout</a>
+        </div>
+    </div>
+
+    <div style="margin-top:50px">
+        <div class="container">
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <div class="card text-center" style="margin-top: 30px">
+                        <div class="card-header">
+                            Login in to shop
+                        </div>
+                        <div class="card-body">
+                        <form action="login" method="post">
+                            <div class="form-group">
+                                <input type="email" name="email" class="form-control"
+                                       v-model.trim="email" required placeholder="Email Address">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password" class="form-control"
+                                       placeholder="Password" v-model="pass">
+                            </div>
+                            <input type="submit" class="btn btn-primary" value="Login"/>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+</script>
+
+</body>
+</html>

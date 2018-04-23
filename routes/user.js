@@ -19,13 +19,4 @@ route.post('/', (req, res) => {
     })
 })
 
-
-route.post('/login/', (req, res) => {
-    dao.getUserById(req.body.email, req.body.password).then((user) => {
-        req.session.uid = user.id;
-        console.log(req.session.uid);
-        res.json(user);
-    })
-})
-
 module.exports = route
