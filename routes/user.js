@@ -3,6 +3,7 @@ const dao = require('../modal/userDao')
 
 var uemail = "asd@asd.com";
 
+//
 route.get('/', (req, res) => {
     dao.getUserById(uemail, "asd").then((user) => {
         res.json(user);

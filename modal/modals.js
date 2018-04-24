@@ -1,7 +1,7 @@
 const db = require('../dataConfig.js')
 const Sequelize = require('sequelize');
 
-
+//product table defination
 const Product = db.define('product', {
     id: {
         type: Sequelize.INTEGER,
@@ -18,6 +18,7 @@ const Product = db.define('product', {
     }
 });
 
+//vendor table definatino
 const Vendor = db.define('vendor', {
     id: {
         type: Sequelize.INTEGER,
@@ -31,6 +32,7 @@ const Vendor = db.define('vendor', {
 
 });
 
+//user table defination
 const User = db.define('user', {
     id: {
         type: Sequelize.INTEGER,
@@ -44,6 +46,7 @@ const User = db.define('user', {
 
 });
 
+//cart table defination
 const Cart = db.define('cart', {
     id: {
         type: Sequelize.INTEGER,

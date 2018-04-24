@@ -55,10 +55,10 @@ app.post('/login', passport.authenticate('local', {
     successRedirect: '/'
 }))
 
-
 app.get('/logout', (req, res) => {
     if(req.user){
         req.logout();
+
         res.clearCookie("connect.sid");
         req.session.destroy();
         res.redirect("/");
